@@ -122,3 +122,45 @@ export const updateBlogController = async (req, res) => {
     });
   }
 };
+
+export const deleteBlogController = async (req, res) => {
+  try {
+    const blog = await BlogModel.findByIdAndDelete(req.params.id).populate(
+      "user"
+    );
+    if (blog) {
+      await blog.user.blog.pull(blog);
+      await blog.user.save();
+      return res.status(200).send({
+        success: true,
+        message: "blog deleted successfully",
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Error in deleting blog",
+    });
+  }
+};
+
+export const userBlogControlller = async (req, res) => {
+  try {
+    const blog = await UserModel.findById(req.params.id).populate("blog");
+    if (!blog) {
+      return res.status(400).send({
+        success: false,
+        message: "no blog found",
+      });
+    }
+    return res.status(200).send({
+      success: true,
+      blog,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Error in finding blog",
+    });
+  }
+};
