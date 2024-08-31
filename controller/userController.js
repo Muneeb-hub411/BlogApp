@@ -46,15 +46,15 @@ export const UserLoginController = async (req, res) => {
     });
   }
 
-  const existingUser = await UserModel.findOne({ email });
-  if (!existingUser) {
+  const User = await UserModel.findOne({ email });
+  if (!User) {
     return res.status(400).send({
       success: false,
       message: "User doesnt exist kindly register first",
     });
   }
 
-  const comparepass = await bcrypt.compare(password, existingUser.password);
+  const comparepass = await bcrypt.compare(password, User.password);
   if (!comparepass) {
     return res.status(400).send({
       success: false,
@@ -65,6 +65,7 @@ export const UserLoginController = async (req, res) => {
   return res.status(200).send({
     success: true,
     message: "User logged in successfully",
+    User,
   });
 };
 
