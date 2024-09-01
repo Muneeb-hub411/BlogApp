@@ -4,15 +4,16 @@ import Register from "./pages/Register";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./Components/Navbar";
+import CreateBlog from "./pages/CreateBlog";
 
 function App() {
   return (
     <>
-      {" "}
       <Navbar />
       <Routes>
         <Route path="/" element={<Blogs />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/create-blog" element={<CreateBlog />} />
 
         <Route path="/login" element={<Login />} />
       </Routes>

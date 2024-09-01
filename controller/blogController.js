@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 import UserModel from "../models/UserModel.js";
 import BlogModel from "../models/BlogModel.js";
-// import cloudinary from "../utils/cloudinary.js";
+import cloudinary from "../utils/cloudinaryConfig.js";
 
 export const createBlogController = async (req, res) => {
   const { title, description, image, user } = req.body;
   try {
-    // const result = await cloudinary.uploader.upload(image, {
-    //   folder: "blogapp",
-    // });
+    const result = await cloudinary.uploader.upload(image, {
+      folder: "blogapp",
+    });
     //validation
     if (!title || !description || !image || !user) {
       return res.status(400).send({
@@ -28,11 +28,11 @@ export const createBlogController = async (req, res) => {
     const newBlog = new BlogModel({
       title,
       description,
-      // image: {
-      //   public_id: result.public_id,
-      //   url: result.secure_url,
-      // },
-      image,
+      image: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+
       user,
     });
     const session = await mongoose.startSession();

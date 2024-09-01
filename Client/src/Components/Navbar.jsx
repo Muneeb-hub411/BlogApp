@@ -19,7 +19,7 @@ const Navbar = () => {
             Blogs
           </li>
           <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200 ">
-            My Blogs
+            <Link to={"/create-blog"}>Create Blog</Link>
           </li>
         </ul>
       )}
