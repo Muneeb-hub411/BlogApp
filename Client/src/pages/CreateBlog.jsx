@@ -1,41 +1,42 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CreateBlog = () => {
+  const navigate = useNavigate();
+  const id = localStorage.getItem("userId");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
 
   const handleImage = (e) => {
     const file = e.target.files[0];
-    setFileToBase(file);
-    console.log(file);
-  };
-
-  const setFileToBase = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImage(reader.result);
-      console.log(image);
-    };
+    setImage(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("image", image);
+    formData.append("user", id);
+
     try {
-      const res = await axios.post("/api/v1/blog/create-blog", {
-        title,
-        description,
-        image,
+      const res = await axios.post("/api/v1/blog/create-blog", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       if (res?.data.success) {
         toast.success("Blog has been created");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
-      toast.error("error in creating blog");
+      toast.error("Error in creating blog");
     }
   };
 
@@ -45,7 +46,7 @@ const CreateBlog = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Create a New Blog
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -88,6 +89,7 @@ const CreateBlog = () => {
             <input
               type="file"
               id="image"
+              name="image"
               onChange={handleImage}
               className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

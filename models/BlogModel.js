@@ -11,14 +11,8 @@ const BlogSchema = new mongoose.Schema({
     required: [true, "Field is required"],
   },
   image: {
-    public_id: {
-      type: String,
-      required: true,
-    },
-    url: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
   user: {
     type: mongoose.Types.ObjectId,

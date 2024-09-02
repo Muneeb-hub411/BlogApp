@@ -16,7 +16,7 @@ const Navbar = () => {
       {isLoggedIn && (
         <ul className=" flex justify-between ">
           <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200 ">
-            Blogs
+            <Link to={"/user-blog"}>My Blogs</Link>
           </li>
           <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200 ">
             <Link to={"/create-blog"}>Create Blog</Link>

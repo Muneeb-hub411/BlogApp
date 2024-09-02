@@ -27,16 +27,19 @@ const Blogs = () => {
     <>
       <div className="grid sm:grid-cols-3 gap-3 p-10 ">
         {blog &&
-          blog.map((blogs) => (
-            <BlogCards
-              key={blogs?._id}
-              image={
-                "https://media.istockphoto.com/id/887987150/photo/blogging-woman-reading-blog.jpg?b=1&s=612x612&w=0&k=20&c=9PyipVek-UL7ECf1tpy0uIRnbajme4W4qoJkJKYczUU="
-              }
-              title={blogs?.title}
-              description={blogs?.description}
-            />
-          ))}
+          blog.map(
+            (blogs) => (
+              console.log(blogs?.image),
+              (
+                <BlogCards
+                  key={blogs?._id}
+                  image={blogs?.image}
+                  title={blogs?.title}
+                  description={blogs?.description}
+                />
+              )
+            )
+          )}
       </div>
     </>
   );

@@ -4,44 +4,49 @@ import BlogModel from "../models/BlogModel.js";
 import cloudinary from "../utils/cloudinaryConfig.js";
 
 export const createBlogController = async (req, res) => {
-  const { title, description, image, user } = req.body;
-  try {
-    const result = await cloudinary.uploader.upload(image, {
-      folder: "blogapp",
+  const { title, description, user } = req.body;
+  const file = req.files?.image;
+
+  // Debugging log
+  console.log("File upload info:", file);
+  console.log("file tmep:", file.tempFilePath);
+
+  // Validation check
+  if (!title || !description || !user || !file) {
+    return res.status(400).send({
+      success: false,
+      message: "Please provide all fields including the image",
     });
-    //validation
-    if (!title || !description || !image || !user) {
-      return res.status(400).send({
-        success: false,
-        message: "Please Provide ALl Fields",
-      });
-    }
-    const exisitingUser = await UserModel.findById(user);
-    //validaton
-    if (!exisitingUser) {
+  }
+
+  try {
+    // Upload the image to Cloudinary
+    const result = await cloudinary.uploader.upload(file.tempFilePath);
+
+    console.log("result is :", result);
+
+    const existingUser = await UserModel.findById(user);
+    if (!existingUser) {
       return res.status(404).send({
         success: false,
-        message: "unable to find user",
+        message: "Unable to find user",
       });
     }
 
     const newBlog = new BlogModel({
       title,
       description,
-      image: {
-        public_id: result.public_id,
-        url: result.secure_url,
-      },
-
+      image: result.url,
       user,
     });
+
     const session = await mongoose.startSession();
     session.startTransaction();
     await newBlog.save({ session });
-    exisitingUser.blog.push(newBlog);
-    await exisitingUser.save({ session });
+    existingUser.blog.push(newBlog);
+    await existingUser.save({ session });
     await session.commitTransaction();
-    await newBlog.save();
+
     return res.status(201).send({
       success: true,
       message: "Blog Created!",
@@ -51,8 +56,8 @@ export const createBlogController = async (req, res) => {
     console.log(error);
     return res.status(400).send({
       success: false,
-      message: "Error WHile Creting blog",
-      error,
+      message: "Error while creating blog",
+      error: error.message,
     });
   }
 };
@@ -155,7 +160,7 @@ export const userBlogControlller = async (req, res) => {
     }
     return res.status(200).send({
       success: true,
-      blog,
+      blogs: blog.blog,
     });
   } catch (error) {
     return res.status(500).send({

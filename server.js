@@ -5,9 +5,18 @@ import dotenv from "dotenv";
 import { connectDb } from "./config/db.js";
 import userRoute from "./Routes/userRoutes.js";
 import blogRoutes from "./Routes/blogRoutes.js";
+import fileUpload from "express-fileupload";
 
 dotenv.config();
 const app = express();
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
