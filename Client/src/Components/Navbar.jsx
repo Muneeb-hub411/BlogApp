@@ -11,7 +11,9 @@ const Navbar = () => {
   return (
     <div className="w-full h-20 bg-blue-500 flex justify-between p-4  text-white text-3xl">
       <div>
-        <h2 className="p-2 text-3xl font-semibold">Blog App</h2>
+        <Link to={"/"}>
+          <h2 className="p-2 text-3xl font-semibold">Blog App</h2>
+        </Link>
       </div>
       {isLoggedIn && (
         <ul className=" flex justify-between ">
@@ -25,12 +27,17 @@ const Navbar = () => {
       )}
 
       <ul className=" flex justify-between">
-        <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200">
-          <Link to="/login">Login</Link>
-        </li>
-        <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200">
-          <Link to="/register"> Register</Link>
-        </li>
+        {!isLoggedIn && (
+          <>
+            <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200">
+              <Link to="/register"> Register</Link>
+            </li>
+            <li className="p-3 text-2xl font-oswald cursor-pointer  hover:scale-105 transition-transform duration-200">
+              <Link to="/login">Login</Link>
+            </li>
+          </>
+        )}
+
         {isLoggedIn && (
           <li
             onClick={handleLogout}
